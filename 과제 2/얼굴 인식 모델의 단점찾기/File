@@ -1,0 +1,74 @@
+
+# 얼굴 인식 프로그램
+
+import cv2
+import sys, os
+
+if not os.path.exists("./pakutas"): 
+os.mkdir("./pakutas")
+
+# 입력 파일 지정하기
+image_file = "./pakutas/photo1.jpg"
+
+# 캐스케이드 파일의 경로 지정하기
+cascade_file = "./cascades/data/haarcascade_frontalface_alt.xml"
+
+# 이미지 읽어 들이기
+image = cv2.imread(image_file)
+
+# 그레이스케일로 변환하기
+image_gs = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# 얼굴 인식 특징 파일 읽어 들이기
+cascade = cv2.CascadeClassifier(cascade_file)
+
+# 얼굴 인식 실행하기
+face_list = cascade.detectMultiScale(image_gs, 
+scaleFactor=1.1, minNeighbors=1, 
+minSize=(150,150))# scaleFactor - 이미지 스케일
+
+# minNeighbors - 얼굴 검출 후보들의 갯수
+# minSize - 가능한 최소 객체 사이즈
+if len(face_list) > 0: 
+# 인식한 부분 표시하기 
+print(face_list) color = (0,0,255) 
+
+for face in face_list: 
+x,y,w,h = face cv2.rectangle(image, (x,y), (x+w, y+h),color,thickness=8) 
+
+# 파일로 출력하기 
+cv2.imwrite("eyesdetect-output.PNG",image)else: 
+print("no face")
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. 소스 주소
+https://github.com/wql7654/bigdata_exam/blob/e341c6029a85741b55b037e4b5e2ac7d7b50f3c0/05_Intergration/_openCV_1_face_recognition.py
+
+
+2. 개요
+1. OpenCV(cv2) 라이브러리를 import 합니다.
+2. 이미지 파일이 저장될 경로를 만들어 줍니다.
+3. 이미지 파일의 경로를 지정해줍니다.
+4. Haar Cascade 분류기 파일의 경로를 지정해줍니다.
+5. cv2.imread() 함수를 사용하여 이미지를 읽어들입니다.
+6. cv2.cvtColor() 함수를 사용하여 읽어들인 이미지를 그레이스케일로 변환합니다.
+7. cv2.CascadeClassifier() 함수를 사용하여 Haar Cascade 분류기를 불러옵니다.
+8. cv2.CascadeClassifier.detectMultiScale() 함수를 사용하여 이미지에서 얼굴을 검출합니다.
+9. 검출된 얼굴 주위에 사각형을 그립니다.
+10. cv2.imwrite() 함수를 사용하여 인식된 얼굴이 그려진 이미지를 파일로 저장합니다.
+만약 얼굴이 검출되지 않았다면 "no face"라는 메시지를 출력합니다.
+
+
+3. 장단점 분석
+- 장점
+• OpenCV 라이브러리를 사용하여 쉽게 얼굴 인식 프로그램을 작성할 수 있습니다.
+• Haar Cascade 분류기를 이용하여 빠르게 얼굴을 검출할 수 있습니다.
+간단한 코드 구조로 이루어져 있어, 쉽게 이해하고 수정할 수 있습니다
+
+- 단점
+• Haar Cascade 분류기는 시야 밝기, 표정, 헤어스타일 등의 변화에 대한 민감도가 높아서, 정확도가 떨어질 수 있습니다.
+• 검출 대상인 얼굴의 각도나 크기 등에 따라서 검출 정확도가 크게 변할 수 있습니다.
+코드 상에서 특별한 보완 조치가 없이 작성되어 있어, 데이터 보안 등의 문제가 발생할 가능성이 있습니다.
+• 재밌는 요소가 더 있으면 좋을 것 같습니다.
